@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Scheduler</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Schedulify</h1>
+        <div class="header-right">
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+            <button id="exportPdfButton">Export to PDF</button>
+        </div>
+    </header>
+    
+    <main>
+        <div class="left-column">
+            <section class="calendar-container">
+                <div id="calendar"></div>
+            </section>
+        </div>
+        <div class="right-column">
+            <section class="scheduler">
+                <h2>Schedule a Conference</h2>
+                <form id="schedulerForm">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" required>
+
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" required>
+
+                    <label for="timezone">Time Zone:</label>
+                    <select id="timezone" required>
+                        <option value="" disabled selected>Select Time Zone</option>
+                    </select>
+
+                    <label for="description">Description:</label>
+                    <textarea id="description"></textarea>
+
+                    <button type="submit">Schedule</button>
+                </form>
+            </section>
+
+            <section class="scheduled-events">
+                <h2>Scheduled Events</h2>
+                <input type="text" id="searchEvents" placeholder="Search events...">
+                <ul id="eventsList"></ul>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
