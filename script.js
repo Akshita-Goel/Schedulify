@@ -83,19 +83,61 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     loadEvents();
+
+    function saveEvents() {
+        const events = calendar.getEvents().map(event => ({
+            id: event.id,
+            title: event.title,
+            start: event.start.toISOString(),
+            description: event.extendedProps.description
+        }));
+        localStorage.setItem('events', JSON.stringify(events));
+    }
+
+    function loadEvents() {
+        const storedEvents = JSON.parse(localStorage.getItem('events'));
+        if (storedEvents) {
+            storedEvents.forEach(storedEvent => {
+                const event = calendar.addEvent({
+                    id: storedEvent.id,
+                    title: storedEvent.title,
+                    start: storedEvent.start,
+                    description: storedEvent.description
+                });
+
+                const eventItem = document.createElement('li');
+                eventItem.innerHTML = `
+                    <div>
+                        <strong>${event.title}</strong><br>
+                        ${event.start.toISOString().split('T')[0]} at ${event.start.toISOString().split('T')[1].substr(0, 5)}<br>
+                        ${event.extendedProps.description}
+                    </div>
+                    <button class="delete-btn">Delete</button>
+                `;
+                eventItem.dataset.eventId = event.id;
+                eventsList.appendChild(eventItem);
+
+                eventItem.querySelector('.delete-btn').addEventListener('click', function() {
+                    event.remove();
+                    eventItem.remove();
+                    saveEvents();
+                });
+            });
+        }
+    }
+
+    function populateTimeZones() {
+        const timeZoneSelect = document.getElementById('timezone');
+        const commonTimeZones = [
+            'UTC', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
+            'Europe/London', 'Europe/Berlin', 'Asia/Tokyo', 'Australia/Sydney'
+        ];
+
+        commonTimeZones.forEach(timeZone => {
+            const option = document.createElement('option');
+            option.value = timeZone;
+            option.textContent = timeZone;
+            timeZoneSelect.appendChild(option);
+        });
+    }
 });
-
-function populateTimeZones() {
-    const timeZoneSelect = document.getElementById('timezone');
-    const commonTimeZones = [
-        'UTC', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
-        'Europe/London', 'Europe/Berlin', 'Asia/Tokyo', 'Australia/Sydney'
-    ];
-
-    commonTimeZones.forEach(timeZone => {
-        const option = document.createElement('option');
-        option.value = timeZone;
-        option.textContent = timeZone;
-        timeZoneSelect.appendChild(option);
-    });
-}
